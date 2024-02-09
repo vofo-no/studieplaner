@@ -1,5 +1,8 @@
-import { format } from "date-fns/format";
-import { nb } from "date-fns/locale/nb";
+const dateFormat = new Intl.DateTimeFormat("nb-NO", {
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+});
 
 interface SectionProps {
   approvedBy?: string;
@@ -16,7 +19,7 @@ export function Approval({ approvedBy, code, date, tenantName }: SectionProps) {
         Studieplannummer {code} oppgis når studieplanen benyttes
       </p>
       <p>
-        Godkjent {format(date, "PPP", { locale: nb })}
+        Godkjent {dateFormat.format(date)}
         {approvedBy && ` av ${approvedBy}`}
       </p>
     </section>
