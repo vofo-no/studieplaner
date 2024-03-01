@@ -1,20 +1,23 @@
 "use client";
 
 import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
+
 import algoliasearch from "algoliasearch/lite";
 import Link from "next/link";
-import { useState } from "react";
 import {
   Highlight,
   Hits,
   InstantSearch,
-  Menu,
   PoweredBy,
-  RefinementList,
   Snippet,
-  useSearchBox,
+  Stats,
 } from "react-instantsearch";
+import { CustomSearchBox } from "./custom-search-box";
+import { history } from "instantsearch.js/es/lib/routers";
+import { Pagination } from "./pagination";
+import { Categories } from "./categories";
+import { useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 
 const searchClient = algoliasearch(
   process.env.NEXT_PUBLIC_ALGOLIA_APP_ID!,
@@ -44,30 +47,48 @@ function Hit({ hit }: { hit: any }) {
   );
 }
 
-function CustomSearchBox() {
-  const { query, refine } = useSearchBox();
-  const [inputValue, setInputValue] = useState(query);
-
-  function setQuery(newQuery: string) {
-    setInputValue(newQuery);
-    refine(newQuery);
-  }
-
-  return (
-    <Input
-      type="search"
-      placeholder="Søk etter studieplan"
-      value={inputValue}
-      onChange={(e) => setQuery(e.currentTarget.value)}
-    />
-  );
-}
-
 export function Search() {
+  const indexName = "studieplaner";
+
+  const searchParams = useSearchParams();
+  const q = searchParams.get("q");
+
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    document.title = [q, "Studieplaner"].filter(Boolean).join(" – ");
+  }, [q]);
+
   return (
     <InstantSearch
-      indexName="studieplaner"
+      indexName={indexName}
       searchClient={searchClient}
+      routing={{
+        stateMapping: {
+          stateToRoute(uiState) {
+            const indexUiState = uiState[indexName];
+
+            return {
+              q: indexUiState.query,
+              emner: indexUiState.refinementList?.kategorier,
+              side: indexUiState.page,
+            };
+          },
+          routeToState: (routeState) => {
+            return {
+              [indexName]: {
+                query: routeState.q,
+                refinementList: routeState.emner
+                  ? { kategorier: routeState.emner }
+                  : undefined,
+                page: routeState.side,
+              },
+            };
+          },
+        },
+        router: history<{ q?: string; emner?: string[]; side?: number }>({
+          cleanUrlOnDispose: false,
+        }),
+      }}
       future={{ preserveSharedStateOnUnmount: true }}
     >
       <div className="my-6">
@@ -76,24 +97,28 @@ export function Search() {
           <PoweredBy />
         </div>
       </div>
-      <div className="flex gap-6 flex-col lg:flex-row-reverse">
-        <div className="lg:w-1/4">
-          <h2 className="text-sm uppercase font-semibold">Kategorier</h2>
-          <RefinementList
-            attribute="kategorier"
-            title="Kategorier"
-            showMore
-            translations={{
-              showMoreButtonText({ isShowingMore }) {
-                return isShowingMore ? "Vis færre" : "Vis flere";
-              },
-            }}
-          />
+      <div className="w-full grid grid-cols-1 md:grid-cols-7 gap-4">
+        <div className="md:col-span-5">
+          <div className="max-w-prose">
+            <div className="text-xs mb-4">
+              <Stats
+                translations={{
+                  rootElementText({ nbHits }) {
+                    return nbHits
+                      ? `${nbHits.toLocaleString()} resultater`
+                      : "Ingen resultater";
+                  },
+                }}
+              />
+            </div>
+            <Hits hitComponent={Hit} />
+            <Pagination />
+          </div>
         </div>
-        <Hits hitComponent={Hit} />
+        <div className="flex-shrink sticky top-0 md:col-span-2">
+          <Categories />
+        </div>
       </div>
-
-      {/* other widgets */}
     </InstantSearch>
   );
 }
