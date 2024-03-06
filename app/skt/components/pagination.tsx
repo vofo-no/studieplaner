@@ -2,14 +2,17 @@ import { usePagination } from "react-instantsearch";
 import {
   Pagination as PaginationUI,
   PaginationContent,
-  PaginationEllipsis,
   PaginationItem,
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
 
-export function Pagination() {
+interface PaginationProps {
+  mobile?: boolean;
+}
+
+export function Pagination({ mobile }: PaginationProps) {
   const {
     pages,
     currentRefinement,
@@ -18,7 +21,7 @@ export function Pagination() {
     canRefine,
     refine,
     createURL,
-  } = usePagination();
+  } = usePagination({ padding: mobile ? 1 : 3 });
 
   if (!canRefine) return null;
 
@@ -44,9 +47,6 @@ export function Pagination() {
             </PaginationLink>
           </PaginationItem>
         ))}
-        <PaginationItem>
-          <PaginationEllipsis />
-        </PaginationItem>
         {!isLastPage && (
           <PaginationItem>
             <PaginationNext

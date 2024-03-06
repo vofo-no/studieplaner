@@ -112,7 +112,12 @@ export function Search() {
               />
             </div>
             <Hits hitComponent={Hit} />
-            <Pagination />
+            <div className="hidden sm:block">
+              <Pagination />
+            </div>
+            <div className="sm:hidden">
+              <Pagination mobile />
+            </div>
           </div>
         </div>
         <div className="flex-shrink sticky top-0 md:col-span-2">
