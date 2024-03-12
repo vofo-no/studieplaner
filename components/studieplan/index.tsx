@@ -1,35 +1,30 @@
 import { fetchStudieplan } from "@/lib/eapply";
-import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { Section } from "./components/section";
-import { Approval } from "./components/approval";
-import { Member } from "./components/member";
+import { Section } from "./section";
+import { Member } from "./member";
+import { Approval } from "./approval";
 
-interface Params {
-  params: { id: string };
+interface StudieplanProps {
+  id: string;
+  tenant: string;
+  modal?: boolean;
 }
 
-export async function generateMetadata({ params }: Params) {
-  const studieplan = await fetchStudieplan(params.id, "skt");
-
-  return {
-    title: studieplan?.title,
-  } as Metadata;
-}
-
-export default async function SktStudieplanPage({
-  params,
-}: {
-  params: { id: string };
-}) {
-  const studieplan = await fetchStudieplan(params.id, "skt");
+export default async function Studieplan({
+  id,
+  tenant,
+  modal,
+}: StudieplanProps) {
+  const studieplan = await fetchStudieplan(id, tenant);
 
   if (!studieplan) notFound();
 
   return (
     <article className="lg:grid lg:space-x-6 lg:grid-cols-3">
       <div className="space-y-4 lg:col-span-2">
-        <h1 className="font-semibold text-4xl">{studieplan.title}</h1>
+        {modal ? null : (
+          <h1 className="font-semibold text-4xl">{studieplan.title}</h1>
+        )}
         <ul className="text-gray-600 flex flex-wrap gap-4">
           <li>Godkjent for {studieplan.hours}</li>
           {studieplan.participants && <li>{studieplan.participants}</li>}
@@ -60,7 +55,7 @@ export default async function SktStudieplanPage({
           </Section>
           <Section
             title="Studieplanen kan knyttes opp mot følgende mål i
-            voksenopplæringsloven"
+              voksenopplæringsloven"
           >
             {studieplan.mainObjectives}
           </Section>

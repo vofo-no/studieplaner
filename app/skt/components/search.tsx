@@ -13,11 +13,9 @@ import {
   Stats,
 } from "react-instantsearch";
 import { CustomSearchBox } from "./custom-search-box";
-import { history } from "instantsearch.js/es/lib/routers";
 import { Pagination } from "./pagination";
 import { Categories } from "./categories";
-import { useEffect } from "react";
-import { useSearchParams } from "next/navigation";
+import { history } from "instantsearch.js/es/lib/routers";
 
 const searchClient = algoliasearch(
   process.env.NEXT_PUBLIC_ALGOLIA_APP_ID!,
@@ -28,7 +26,7 @@ function Hit({ hit }: { hit: any }) {
   return (
     <div className="mb-6">
       <h2 className="font-semibold text-lg">
-        <Link href={`/skt/${hit.nr}`} className="hover:underline">
+        <Link href={`/skt/studieplan/${hit.nr}`} className="hover:underline">
           <Highlight attribute="nr" hit={hit} />{" "}
           <Highlight attribute="tittel" hit={hit} />
         </Link>
@@ -49,14 +47,6 @@ function Hit({ hit }: { hit: any }) {
 
 export function Search() {
   const indexName = "studieplaner";
-
-  const searchParams = useSearchParams();
-  const q = searchParams.get("q");
-
-  useEffect(() => {
-    if (typeof document === "undefined") return;
-    document.title = [q, "Studieplaner"].filter(Boolean).join(" – ");
-  }, [q]);
 
   return (
     <InstantSearch
@@ -87,6 +77,9 @@ export function Search() {
         },
         router: history<{ q?: string; emner?: string[]; side?: number }>({
           cleanUrlOnDispose: false,
+          windowTitle(routeState) {
+            return [routeState.q, "Studieplaner"].filter(Boolean).join(" – ");
+          },
         }),
       }}
       future={{ preserveSharedStateOnUnmount: true }}
