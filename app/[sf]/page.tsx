@@ -2,8 +2,6 @@ import { getTenant } from "@/lib/tenants";
 import { Search } from "./components/search";
 import { notFound } from "next/navigation";
 
-export const dynamic = "force-dynamic";
-
 interface PageProps {
   params: { sf: string };
 }

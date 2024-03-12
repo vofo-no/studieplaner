@@ -1,16 +1,10 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
-
 import algoliasearch from "algoliasearch/lite";
-import Link from "next/link";
 import {
   Configure,
-  Highlight,
-  Hits,
   InstantSearch,
   PoweredBy,
-  Snippet,
   Stats,
 } from "react-instantsearch";
 import { CustomSearchBox } from "./custom-search-box";
@@ -18,37 +12,12 @@ import { Pagination } from "./pagination";
 import { Categories } from "./categories";
 import { history } from "instantsearch.js/es/lib/routers";
 import { useParams } from "next/navigation";
+import { Hits } from "./hits";
 
 const searchClient = algoliasearch(
   process.env.NEXT_PUBLIC_ALGOLIA_APP_ID!,
   process.env.NEXT_PUBLIC_ALGOLIA_SEARCH_KEY!
 );
-
-function Hit({ hit }: { hit: any }) {
-  return (
-    <div className="mb-6">
-      <h2 className="font-semibold text-lg">
-        <Link
-          href={`/${hit.sf}/studieplan/${hit.nr}`}
-          className="hover:underline"
-        >
-          <Highlight attribute="nr" hit={hit} />{" "}
-          <Highlight attribute="tittel" hit={hit} />
-        </Link>
-      </h2>
-      <div className="mb-1">
-        {hit.kategorier?.map((item: string) => (
-          <Badge variant="outline" key={item}>
-            {item}
-          </Badge>
-        ))}
-      </div>
-      <p>
-        <Snippet hit={hit} attribute="innhold" />
-      </p>
-    </div>
-  );
-}
 
 export function Search() {
   const indexName = "studieplaner";
@@ -111,7 +80,7 @@ export function Search() {
                 }}
               />
             </div>
-            <Hits hitComponent={Hit} />
+            <Hits />
             <div className="hidden sm:block">
               <Pagination />
             </div>
