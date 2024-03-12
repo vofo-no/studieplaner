@@ -1,8 +1,7 @@
-export const tenants: Array<{ key: string; name: string; header: string }> = [
+export const tenants: Array<{ key: string; name: string }> = [
   {
     key: "skt",
     name: "Studieforbundet kultur og tradisjon",
-    header: "bg-fuchsia-700 text-white",
   },
 ];
 

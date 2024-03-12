@@ -8,7 +8,7 @@ const headerVariants = cva("shadow py-4 print:hidden", {
   variants: {
     tenant: {
       default: "bg-primary text-primary-foreground",
-      skt: getTenant("skt")?.header,
+      skt: "bg-fuchsia-700 text-white",
     },
   },
   defaultVariants: {
