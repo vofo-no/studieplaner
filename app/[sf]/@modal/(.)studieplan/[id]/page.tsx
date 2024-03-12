@@ -5,29 +5,25 @@ import { Modal } from "./modal";
 import { notFound } from "next/navigation";
 
 interface Params {
-  params: { id: string };
+  params: { id: string; sf: string };
 }
 
 export async function generateMetadata({ params }: Params) {
-  const studieplan = await fetchStudieplan(params.id, "skt");
+  const studieplan = await fetchStudieplan(params.id, params.sf);
 
   return {
     title: studieplan?.title,
   } as Metadata;
 }
 
-export default async function SktStudieplanPage({
-  params,
-}: {
-  params: { id: string };
-}) {
-  const studieplan = await fetchStudieplan(params.id, "skt");
+export default async function StudieplanPage({ params }: Params) {
+  const studieplan = await fetchStudieplan(params.id, params.sf);
 
   if (!studieplan) notFound();
 
   return (
     <Modal title={studieplan.title}>
-      <Studieplan id={params.id} tenant="skt" modal />
+      <Studieplan id={params.id} tenant={params.sf} modal />
     </Modal>
   );
 }

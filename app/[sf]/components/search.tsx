@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import algoliasearch from "algoliasearch/lite";
 import Link from "next/link";
 import {
+  Configure,
   Highlight,
   Hits,
   InstantSearch,
@@ -16,6 +17,7 @@ import { CustomSearchBox } from "./custom-search-box";
 import { Pagination } from "./pagination";
 import { Categories } from "./categories";
 import { history } from "instantsearch.js/es/lib/routers";
+import { useParams } from "next/navigation";
 
 const searchClient = algoliasearch(
   process.env.NEXT_PUBLIC_ALGOLIA_APP_ID!,
@@ -26,7 +28,10 @@ function Hit({ hit }: { hit: any }) {
   return (
     <div className="mb-6">
       <h2 className="font-semibold text-lg">
-        <Link href={`/skt/studieplan/${hit.nr}`} className="hover:underline">
+        <Link
+          href={`/${hit.sf}/studieplan/${hit.nr}`}
+          className="hover:underline"
+        >
           <Highlight attribute="nr" hit={hit} />{" "}
           <Highlight attribute="tittel" hit={hit} />
         </Link>
@@ -47,6 +52,7 @@ function Hit({ hit }: { hit: any }) {
 
 export function Search() {
   const indexName = "studieplaner";
+  const params = useParams();
 
   return (
     <InstantSearch
@@ -84,6 +90,7 @@ export function Search() {
       }}
       future={{ preserveSharedStateOnUnmount: true }}
     >
+      <Configure filters={`sf:${params["sf"]}`} />
       <div className="my-6">
         <CustomSearchBox />
         <div className="w-28 float-end my-2">
