@@ -20,7 +20,9 @@ export async function GET(request: NextRequest) {
 
   const index = client.initIndex("studieplaner");
 
-  index.replaceAllObjects(data).wait();
+  await index.replaceAllObjects(data, { safe: true }).then(({ objectIDs }) => {
+    console.log(`Oppdatert ${objectIDs.length} objekter`);
+  });
 
   return Response.json({ updated: data.length });
 }
