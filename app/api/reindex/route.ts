@@ -1,3 +1,5 @@
+export const maxDuration = 30;
+
 import { fetchStudieplansForIndex } from "@/lib/eapply";
 import algoliasearch from "algoliasearch";
 
