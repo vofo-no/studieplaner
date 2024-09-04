@@ -1,6 +1,6 @@
 "use client";
 
-import algoliasearch from "algoliasearch/lite";
+import { liteClient as algoliasearch } from "algoliasearch/lite";
 import {
   Configure,
   InstantSearch,
@@ -29,7 +29,7 @@ export function Search() {
       searchClient={searchClient}
       routing={{
         stateMapping: {
-          stateToRoute(uiState) {
+          stateToRoute(uiState: any) {
             const indexUiState = uiState[indexName];
 
             return {
@@ -38,7 +38,7 @@ export function Search() {
               side: indexUiState.page,
             };
           },
-          routeToState: (routeState) => {
+          routeToState: (routeState: any) => {
             return {
               [indexName]: {
                 query: routeState.q,

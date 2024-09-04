@@ -29,6 +29,9 @@ importers:
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
+      instantsearch.js:
+        specifier: ^4.74.0
+        version: 4.74.0(algoliasearch@5.2.5)
       lucide-react:
         specifier: ^0.323.0
         version: 0.323.0(react@18.3.1)

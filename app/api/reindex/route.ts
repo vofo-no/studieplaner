@@ -1,7 +1,7 @@
 export const maxDuration = 30;
 
 import { fetchStudieplansForIndex } from "@/lib/eapply";
-import algoliasearch from "algoliasearch";
+import { algoliasearch } from "algoliasearch";
 
 import type { NextRequest } from "next/server";
 
@@ -20,11 +20,9 @@ export async function GET(request: NextRequest) {
     process.env.ALGOLIA_ADMIN_KEY!
   );
 
-  const index = client.initIndex("studieplaner");
+  const indexName = "studieplaner";
 
-  await index.replaceAllObjects(data, { safe: true }).then(({ objectIDs }) => {
-    console.log(`Oppdatert ${objectIDs.length} objekter`);
-  });
+  await client.replaceAllObjects({ indexName, objects: data });
 
   return Response.json({ updated: data.length });
 }
