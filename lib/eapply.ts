@@ -19,6 +19,7 @@ function eApplyGetRequest(url: string) {
 }
 
 const TENANTS: Record<string, string> = {
+  funkis: "D768FD44-4B5D-4AB9-8FF8-467EDE1EAAB8",
   skt: "73E12C2A-64A4-4EAC-A80A-898F3F3BFEF3",
 };
 
