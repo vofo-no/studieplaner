@@ -13,10 +13,9 @@ export async function GET(request: NextRequest) {
     });
   }
 
-  const data = await Promise.all([
-    fetchStudieplansForIndex("funkis"),
-    fetchStudieplansForIndex("skt"),
-  ]).then(results => return [].concat(...results));
+  const dataFunkis = await fetchStudieplansForIndex("funkis");
+  const dataSkt = await fetchStudieplansForIndex("skt");
+  const data = [...dataFunkis, ...dataSkt];
 
   const client = algoliasearch(
     process.env.NEXT_PUBLIC_ALGOLIA_APP_ID!,
