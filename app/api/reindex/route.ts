@@ -13,7 +13,10 @@ export async function GET(request: NextRequest) {
     });
   }
 
-  const data = await fetchStudieplansForIndex("skt");
+  const data = await Promise.all([
+    fetchStudieplansForIndex("funkis"),
+    fetchStudieplansForIndex("skt"),
+  ]).then(results => return [].concat(...results));
 
   const client = algoliasearch(
     process.env.NEXT_PUBLIC_ALGOLIA_APP_ID!,
