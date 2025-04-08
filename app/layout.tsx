@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { PoweredByVercel } from "@/components/poweredbyvercel";
 import { Header } from "@/components/header";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -28,7 +27,6 @@ export default function RootLayout({
               <div>
                 ❤ Laget av Vofo med data fra studieforbundets kurssystem.
               </div>
-              <PoweredByVercel />
             </div>
           </footer>
         </div>
